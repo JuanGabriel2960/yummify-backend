@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import db from '../database/connection';
 
 class Server {
 
@@ -8,9 +9,20 @@ class Server {
 	constructor() {
 		this.app = express();
 
+		this.connection()
+
 		this.middlewares();
 
 		this.routes();
+	}
+
+	async connection() {
+		try {
+			await db.authenticate()
+			console.log('Successful connection to database')
+		} catch {
+			throw new Error('Error establishing connection to database')
+		}
 	}
 
 	middlewares() {
