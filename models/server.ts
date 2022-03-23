@@ -2,9 +2,15 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import db from '../database/connection';
 
+import auth from '../routes/auth';
+
 class Server {
 
 	private app: Application;
+
+	private paths = {
+		auth: '/api/auth',
+	};
 
 	constructor() {
 		this.app = express();
@@ -34,6 +40,8 @@ class Server {
 		this.app.get('/', (req, res) => {
 			res.send('yummify-backend');
 		});
+
+		this.app.use(this.paths.auth, auth)
 	}
 
 	listen() {

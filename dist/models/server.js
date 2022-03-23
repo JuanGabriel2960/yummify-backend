@@ -15,8 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const connection_1 = __importDefault(require("../database/connection"));
+const auth_1 = __importDefault(require("../routes/auth"));
 class Server {
     constructor() {
+        this.paths = {
+            auth: '/api/auth',
+        };
         this.app = express_1.default();
         this.connection();
         this.middlewares();
@@ -41,6 +45,7 @@ class Server {
         this.app.get('/', (req, res) => {
             res.send('yummify-backend');
         });
+        this.app.use(this.paths.auth, auth_1.default);
     }
     listen() {
         this.app.listen(process.env.PORT, () => {
