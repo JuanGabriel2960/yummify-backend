@@ -3,6 +3,7 @@ import cors from 'cors';
 import db from '../database/connection';
 
 import auth from '../routes/auth';
+import menu from '../routes/menu';
 
 class Server {
 
@@ -10,6 +11,7 @@ class Server {
 
 	private paths = {
 		auth: '/api/auth',
+		menu: '/api/menu',
 	};
 
 	constructor() {
@@ -42,6 +44,7 @@ class Server {
 		});
 
 		this.app.use(this.paths.auth, auth)
+		this.app.use(this.paths.menu, menu)
 	}
 
 	listen() {
