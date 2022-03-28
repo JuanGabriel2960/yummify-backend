@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateJWT = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const customer_1 = __importDefault(require("../models/database/customer"));
+const admin_1 = __importDefault(require("../models/database/admin"));
 const validateJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token = req.header('Authorization');
     if (!token) {
@@ -29,10 +30,10 @@ const validateJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             var authenticated = yield customer_1.default.findByPk(id, { attributes: { exclude: ['password'] } });
         }
         else if (type === 'admin') {
-            var authenticated = yield customer_1.default.findByPk(id, { attributes: { exclude: ['password'] } });
+            var authenticated = yield admin_1.default.findByPk(id, { attributes: { exclude: ['password'] } });
         }
-        if (!authenticated) {
-            res.status(401).json({
+        if (!authenticated || !authenticated.status) {
+            return res.status(401).json({
                 msg: 'The token is not valid.'
             });
         }

@@ -16,6 +16,12 @@ export const customerLogin = async (req: Request, res: Response) => {
             })
         }
 
+        if (!customer.status) {
+            return res.status(400).json({
+                msg: 'Your account has been deactivated.'
+            });
+        }
+
         const checkPassword = bcryptjs.compareSync(password, customer.password)
         if (!checkPassword) {
             return res.status(401).json({
@@ -67,6 +73,12 @@ export const adminLogin = async (req: Request, res: Response) => {
             return res.status(401).json({
                 msg: 'Wrong credentials.'
             })
+        }
+
+        if (!admin.status) {
+            return res.status(400).json({
+                msg: 'Your account is not activated, contact the administrator.'
+            });
         }
 
         const checkPassword = bcryptjs.compareSync(password, admin.password)

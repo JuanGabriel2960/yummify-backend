@@ -26,6 +26,11 @@ const customerLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 msg: 'Wrong credentials.'
             });
         }
+        if (!customer.status) {
+            return res.status(400).json({
+                msg: 'Your account has been deactivated.'
+            });
+        }
         const checkPassword = bcryptjs_1.default.compareSync(password, customer.password);
         if (!checkPassword) {
             return res.status(401).json({
@@ -70,6 +75,11 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!admin) {
             return res.status(401).json({
                 msg: 'Wrong credentials.'
+            });
+        }
+        if (!admin.status) {
+            return res.status(400).json({
+                msg: 'Your account is not activated, contact the administrator.'
             });
         }
         const checkPassword = bcryptjs_1.default.compareSync(password, admin.password);

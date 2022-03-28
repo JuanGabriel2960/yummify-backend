@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import Customer from '../models/database/customer';
+import Admin from '../models/database/admin';
 
 interface JWTPayload {
     id: number;
@@ -26,11 +27,11 @@ export const validateJWT = async (req: Request, res: Response, next: NextFunctio
         if (type === 'customer') {
             var authenticated = await Customer.findByPk(id, { attributes: { exclude: ['password'] } })
         } else if (type === 'admin') {
-            var authenticated = await Customer.findByPk(id, { attributes: { exclude: ['password'] } })
+            var authenticated = await Admin.findByPk(id, { attributes: { exclude: ['password'] } })
         }
 
-        if (!authenticated) {
-            res.status(401).json({
+        if (!authenticated || !authenticated.status) {
+            return res.status(401).json({
                 msg: 'The token is not valid.'
             })
         }
