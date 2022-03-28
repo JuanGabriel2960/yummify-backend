@@ -1,7 +1,15 @@
 import Customer from '../models/database/customer';
+import Admin from '../models/database/admin';
 
-export const validateEmail = async (email: string) => {
+export const validateCustomerEmail = async (email: string) => {
     const emailExist = await Customer.findOne({ where: { email } })
+    if (emailExist) {
+        throw new Error('The email already exists.')
+    }
+}
+
+export const validateAdminEmail = async (email: string) => {
+    const emailExist = await Admin.findOne({ where: { email } })
     if (emailExist) {
         throw new Error('The email already exists.')
     }

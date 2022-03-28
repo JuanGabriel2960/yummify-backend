@@ -12,15 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateID = exports.validateEmail = void 0;
+exports.validateID = exports.validateAdminEmail = exports.validateCustomerEmail = void 0;
 const customer_1 = __importDefault(require("../models/database/customer"));
-const validateEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+const admin_1 = __importDefault(require("../models/database/admin"));
+const validateCustomerEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const emailExist = yield customer_1.default.findOne({ where: { email } });
     if (emailExist) {
         throw new Error('The email already exists.');
     }
 });
-exports.validateEmail = validateEmail;
+exports.validateCustomerEmail = validateCustomerEmail;
+const validateAdminEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const emailExist = yield admin_1.default.findOne({ where: { email } });
+    if (emailExist) {
+        throw new Error('The email already exists.');
+    }
+});
+exports.validateAdminEmail = validateAdminEmail;
 const validateID = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const idExist = yield customer_1.default.findByPk(id);
     if (!idExist) {

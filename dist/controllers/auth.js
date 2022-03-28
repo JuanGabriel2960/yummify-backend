@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.renewToken = exports.customerRegister = exports.customerLogin = void 0;
+exports.renewToken = exports.adminRegister = exports.adminLogin = exports.customerRegister = exports.customerLogin = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const customer_1 = __importDefault(require("../models/database/customer"));
+const admin_1 = __importDefault(require("../models/database/admin"));
 const generateJWT_1 = require("../helpers/generateJWT");
 const customerLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
@@ -23,6 +24,11 @@ const customerLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!customer) {
             return res.status(401).json({
                 msg: 'Wrong credentials.'
+            });
+        }
+        if (!customer.status) {
+            return res.status(400).json({
+                msg: 'Your account has been deactivated.'
             });
         }
         const checkPassword = bcryptjs_1.default.compareSync(password, customer.password);
@@ -62,6 +68,57 @@ const customerRegister = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.customerRegister = customerRegister;
+const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    try {
+        const admin = yield admin_1.default.findOne({ where: { email } });
+        if (!admin) {
+            return res.status(401).json({
+                msg: 'Wrong credentials.'
+            });
+        }
+        if (!admin.status) {
+            return res.status(400).json({
+                msg: 'Your account is not activated, contact the administrator.'
+            });
+        }
+        const checkPassword = bcryptjs_1.default.compareSync(password, admin.password);
+        if (!checkPassword) {
+            return res.status(401).json({
+                msg: 'Wrong credentials.'
+            });
+        }
+        const token = yield generateJWT_1.generateJWT(admin.id, 'admin');
+        res.json({
+            token
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            msg: 'Internal Server Error.'
+        });
+    }
+});
+exports.adminLogin = adminLogin;
+const adminRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, email, password, role } = req.body;
+    const admin = admin_1.default.build({ name, email, password, role });
+    try {
+        const salt = bcryptjs_1.default.genSaltSync();
+        admin.password = bcryptjs_1.default.hashSync(password, salt);
+        yield admin.save();
+        const token = yield generateJWT_1.generateJWT(admin.id, 'admin');
+        res.json({
+            token
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            msg: 'Internal Server Error.'
+        });
+    }
+});
+exports.adminRegister = adminRegister;
 const renewToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { authenticated, type } = req.body;
     const token = yield generateJWT_1.generateJWT(authenticated.id, type);
