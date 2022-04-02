@@ -13,19 +13,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMenu = void 0;
+const paginator_1 = require("../helpers/paginator");
 const menu_1 = __importDefault(require("../models/database/menu"));
 const getMenu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const limit = Number(req.query.limit) || 10;
+    const offset = Number(req.query.offset) || 0;
     const { type } = req.query;
     try {
-        const menu = yield menu_1.default.findAll({
+        const menu = yield menu_1.default.findAndCountAll({
             where: {
                 type: type || ['pizza', 'burger', 'extra']
             },
+            limit: limit,
+            offset: offset,
             attributes: {
                 exclude: ['id']
             }
         });
-        res.json(menu);
+        res.json({
+            "count": menu.count,
+            "next": paginator_1.nextOffset(menu.count, limit, offset),
+            "previous": paginator_1.previousOffset(menu.count, limit, offset),
+            "menu": menu.rows
+        });
     }
     catch (error) {
         return res.status(500).json({
