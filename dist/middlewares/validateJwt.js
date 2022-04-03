@@ -25,11 +25,11 @@ const validateJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
     token = token.replace(/^Bearer\s+/, "");
     try {
-        const { id, type } = jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY);
-        if (type === 'customer') {
+        const { id, authenticated_type } = jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY);
+        if (authenticated_type === 'customer') {
             var authenticated = yield customer_1.default.findByPk(id, { attributes: { exclude: ['password'] } });
         }
-        else if (type === 'admin') {
+        else if (authenticated_type === 'admin') {
             var authenticated = yield admin_1.default.findByPk(id, { attributes: { exclude: ['password'] } });
         }
         if (!authenticated || !authenticated.status) {
@@ -37,8 +37,8 @@ const validateJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
                 msg: 'The token is not valid.'
             });
         }
-        req.body = {
-            type,
+        req.cookies = {
+            authenticated_type,
             authenticated
         };
         next();

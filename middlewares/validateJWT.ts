@@ -5,7 +5,7 @@ import Admin from '../models/database/admin';
 
 interface JWTPayload {
     id: number;
-    type: string;
+    authenticated_type: string;
     iat: number;
     exp: number;
 }
@@ -22,11 +22,11 @@ export const validateJWT = async (req: Request, res: Response, next: NextFunctio
     token = token.replace(/^Bearer\s+/, "");
 
     try {
-        const { id, type } = jwt.verify(token, process.env.SECRET_KEY as string) as JWTPayload;
+        const { id, authenticated_type } = jwt.verify(token, process.env.SECRET_KEY as string) as JWTPayload;
 
-        if (type === 'customer') {
+        if (authenticated_type === 'customer') {
             var authenticated = await Customer.findByPk(id, { attributes: { exclude: ['password'] } })
-        } else if (type === 'admin') {
+        } else if (authenticated_type === 'admin') {
             var authenticated = await Admin.findByPk(id, { attributes: { exclude: ['password'] } })
         }
 
@@ -36,8 +36,8 @@ export const validateJWT = async (req: Request, res: Response, next: NextFunctio
             })
         }
 
-        req.body = {
-            type,
+        req.cookies = {
+            authenticated_type,
             authenticated
         }
 
