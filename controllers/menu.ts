@@ -1,19 +1,29 @@
 import { Request, Response } from 'express';
+import { Op } from 'sequelize';
 import { nextOffset, previousOffset } from '../helpers/paginator';
 import Menu from '../models/database/menu'
 
 export const getMenu = async (req: Request, res: Response) => {
     const limit = Number(req.query.limit) || 10;
     const offset = Number(req.query.offset) || 0;
-    const { type } = req.query;
+    const { name, description, type } = req.query;
 
     try {
         const menu = await Menu.findAndCountAll({
             where: {
+                name: {
+                    [Op.like]: `%${name || ''}%`
+                },
+                description: {
+                    [Op.like]: `%${description || ''}%`
+                },
                 type: type as string || ['pizza', 'burger', 'extra']
             },
             limit: limit,
-            offset: offset
+            offset: offset,
+            order: [
+                ['id', 'ASC']
+            ]
         })
 
         res.json({
