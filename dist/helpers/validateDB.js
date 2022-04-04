@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateID = exports.validateAdminEmail = exports.validateCustomerEmail = void 0;
+exports.validateMenuId = exports.validateID = exports.validateAdminEmail = exports.validateCustomerEmail = void 0;
 const customer_1 = __importDefault(require("../models/database/customer"));
 const admin_1 = __importDefault(require("../models/database/admin"));
+const menu_1 = __importDefault(require("../models/database/menu"));
 const validateCustomerEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const emailExist = yield customer_1.default.findOne({ where: { email } });
     if (emailExist) {
@@ -36,4 +37,11 @@ const validateID = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.validateID = validateID;
+const validateMenuId = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const idExist = yield menu_1.default.findByPk(id);
+    if (!idExist) {
+        throw new Error('The ID is not valid.');
+    }
+});
+exports.validateMenuId = validateMenuId;
 //# sourceMappingURL=validateDB.js.map

@@ -123,8 +123,8 @@ export const adminRegister = async (req: Request, res: Response) => {
 }
 
 export const renewToken = async (req: Request, res: Response) => {
-    const { authenticated, type } = req.body
-    const token = await generateJWT(authenticated.id, type)
+    const { authenticated, authenticated_type } = req.cookies
+    const token = await generateJWT(authenticated.id, authenticated_type)
 
     res.json({
         authenticated,

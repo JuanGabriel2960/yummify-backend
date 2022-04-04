@@ -120,8 +120,8 @@ const adminRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.adminRegister = adminRegister;
 const renewToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { authenticated, type } = req.body;
-    const token = yield generateJWT_1.generateJWT(authenticated.id, type);
+    const { authenticated, authenticated_type } = req.cookies;
+    const token = yield generateJWT_1.generateJWT(authenticated.id, authenticated_type);
     res.json({
         authenticated,
         token
