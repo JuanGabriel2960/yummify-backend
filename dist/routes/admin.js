@@ -30,6 +30,12 @@ router.post('/', [
     express_validator_1.check('role', 'Role is required.').not().isEmpty(),
     validateFields_1.validateFields
 ], admin_1.postAdmin);
+router.patch('/:id', [
+    validateJWT_1.validateJWT,
+    express_validator_1.check('status', 'Status is required.').not().isEmpty(),
+    express_validator_1.check('status', 'Status is not valid.').isBoolean(),
+    validateFields_1.validateFields
+], admin_1.activateAdmin);
 router.delete('/:id', [
     validateJWT_1.validateJWT,
     express_validator_1.check('id').custom(validateDB_1.validateAdminId),

@@ -77,6 +77,31 @@ export const postAdmin = async (req: Request, res: Response) => {
     }
 }
 
+export const activateAdmin = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { status } = req.body
+
+    try {
+        await Admin.update(
+            { status },
+            {
+                where: {
+                    id
+                }
+            }
+        )
+
+        res.json({
+            msg: `Admin ${status == true ? 'activated' : 'disabled'} successfully.`
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            msg: 'Internal Server Error.'
+        })
+    }
+}
+
 export const deleteAdmin = async (req: Request, res: Response) => {
     const { id } = req.params;
 

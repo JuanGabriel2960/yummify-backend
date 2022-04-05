@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAdmin = exports.deleteAdmin = exports.postAdmin = exports.getAdminById = exports.getAdministrators = void 0;
+exports.updateAdmin = exports.deleteAdmin = exports.activateAdmin = exports.postAdmin = exports.getAdminById = exports.getAdministrators = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const sequelize_1 = require("sequelize");
 const paginator_1 = require("../helpers/paginator");
@@ -86,6 +86,27 @@ const postAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.postAdmin = postAdmin;
+const activateAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+        yield admin_1.default.update({ status }, {
+            where: {
+                id
+            }
+        });
+        res.json({
+            msg: `Admin ${status == true ? 'activated' : 'disabled'} successfully.`
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: 'Internal Server Error.'
+        });
+    }
+});
+exports.activateAdmin = activateAdmin;
 const deleteAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {

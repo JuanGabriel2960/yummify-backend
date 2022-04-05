@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { getAdministrators, getAdminById, postAdmin, deleteAdmin, updateAdmin } from '../controllers/admin';
+import { getAdministrators, getAdminById, postAdmin, activateAdmin, deleteAdmin, updateAdmin } from '../controllers/admin';
 import { validateAdminEmail, validateAdminId } from '../helpers/validateDB';
 import { validateFields } from '../middlewares/validateFields';
 import { validateJWT } from '../middlewares/validateJWT';
@@ -38,6 +38,15 @@ router.post('/',
     validateFields
 ],
 postAdmin)
+
+router.patch('/:id',
+[
+    validateJWT,
+    check('status', 'Status is required.').not().isEmpty(),
+    check('status', 'Status is not valid.').isBoolean(),
+    validateFields
+],
+activateAdmin)
 
 router.delete('/:id',
 [
