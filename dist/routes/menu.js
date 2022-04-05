@@ -32,7 +32,7 @@ router.delete('/:id', [
     validateJWT_1.validateJWT,
     express_validator_1.check('id').custom(validateDB_1.validateMenuId),
     validateFields_1.validateFields
-], menu_1.deleteFoodById);
+], menu_1.deleteFood);
 router.put('/:id', [
     validateJWT_1.validateJWT,
     express_validator_1.check('id').custom(validateDB_1.validateMenuId),
