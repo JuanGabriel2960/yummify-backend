@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { getMenu, getFoodById, postFood, deleteFoodById, updateFood } from '../controllers/menu';
+import { getMenu, getFoodById, postFood, deleteFood, updateFood } from '../controllers/menu';
 import { validateMenuId } from '../helpers/validateDB';
 import { validateFields } from '../middlewares/validateFields';
 import { validateJWT } from '../middlewares/validateJWT';
@@ -43,7 +43,7 @@ router.delete('/:id',
     check('id').custom(validateMenuId),
     validateFields
 ],
-deleteFoodById)
+deleteFood)
 
 router.put('/:id',
 [

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateFood = exports.deleteFoodById = exports.postFood = exports.getFoodById = exports.getMenu = void 0;
+exports.updateFood = exports.deleteFood = exports.postFood = exports.getFoodById = exports.getMenu = void 0;
 const sequelize_1 = require("sequelize");
 const paginator_1 = require("../helpers/paginator");
 const menu_1 = __importDefault(require("../models/database/menu"));
@@ -24,10 +24,10 @@ const getMenu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const menu = yield menu_1.default.findAndCountAll({
             where: {
                 name: {
-                    [sequelize_1.Op.like]: `%${name || ''}%`
+                    [sequelize_1.Op.iLike]: `%${name || ''}%`
                 },
                 description: {
-                    [sequelize_1.Op.like]: `%${description || ''}%`
+                    [sequelize_1.Op.iLike]: `%${description || ''}%`
                 },
                 type: type || ['pizza', 'burger', 'extra']
             },
@@ -80,7 +80,7 @@ const postFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.postFood = postFood;
-const deleteFoodById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
         yield menu_1.default.destroy({
@@ -98,7 +98,7 @@ const deleteFoodById = (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
     }
 });
-exports.deleteFoodById = deleteFoodById;
+exports.deleteFood = deleteFood;
 const updateFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { name, description, price, calories, image, type } = req.body;

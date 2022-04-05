@@ -12,10 +12,10 @@ export const getMenu = async (req: Request, res: Response) => {
         const menu = await Menu.findAndCountAll({
             where: {
                 name: {
-                    [Op.like]: `%${name || ''}%`
+                    [Op.iLike]: `%${name || ''}%`
                 },
                 description: {
-                    [Op.like]: `%${description || ''}%`
+                    [Op.iLike]: `%${description || ''}%`
                 },
                 type: type as string || ['pizza', 'burger', 'extra']
             },
@@ -70,7 +70,7 @@ export const postFood = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteFoodById = async (req: Request, res: Response) => {
+export const deleteFood = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     try {

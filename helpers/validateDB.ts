@@ -29,3 +29,10 @@ export const validateMenuId = async (id: string) => {
         throw new Error('The ID is not valid.')
     }
 }
+
+export const validateAdminId = async (id: string) => {
+    const idExist = await Admin.findByPk(id)
+    if (!idExist) {
+        throw new Error('The ID is not valid.')
+    }
+}

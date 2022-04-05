@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateMenuId = exports.validateID = exports.validateAdminEmail = exports.validateCustomerEmail = void 0;
+exports.validateAdminId = exports.validateMenuId = exports.validateID = exports.validateAdminEmail = exports.validateCustomerEmail = void 0;
 const customer_1 = __importDefault(require("../models/database/customer"));
 const admin_1 = __importDefault(require("../models/database/admin"));
 const menu_1 = __importDefault(require("../models/database/menu"));
@@ -44,4 +44,11 @@ const validateMenuId = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.validateMenuId = validateMenuId;
+const validateAdminId = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const idExist = yield admin_1.default.findByPk(id);
+    if (!idExist) {
+        throw new Error('The ID is not valid.');
+    }
+});
+exports.validateAdminId = validateAdminId;
 //# sourceMappingURL=validateDB.js.map
