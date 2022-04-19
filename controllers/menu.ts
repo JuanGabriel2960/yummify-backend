@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import { nextOffset, previousOffset } from '../helpers/paginator';
+import { getCloudinaryImageId } from '../helpers/uploads';
 import Menu from '../models/database/menu'
+
+const cloudinary = require('cloudinary').v2
+cloudinary.config(process.env.CLOUDINARY_URL)
 
 export const getMenu = async (req: Request, res: Response) => {
     const limit = Number(req.query.limit) || 10;
@@ -55,7 +59,9 @@ export const getFoodById = async (req: Request, res: Response) => {
 
 export const postFood = async (req: Request, res: Response) => {
     const { name, description, price, calories, image, type } = req.body
-    const food = Menu.build({ name, description, price, calories, image, type })
+    const { secure_url } = await cloudinary.uploader.upload(image);
+
+    const food = Menu.build({ name, description, price, calories, image: secure_url, type })
 
     try {
         await food.save()
@@ -74,11 +80,12 @@ export const deleteFood = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     try {
-        await Menu.destroy({
-            where: {
-                id
-            }
-        })
+        const menu = await Menu.findByPk(id as string)
+
+        const imageId = getCloudinaryImageId(menu.image)
+        cloudinary.uploader.destroy(imageId);
+
+        await menu.destroy()
 
         res.json({
             msg: 'Food deleted successfully.'
@@ -94,14 +101,16 @@ export const updateFood = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, description, price, calories, image, type } = req.body
 
+    const { secure_url } = await cloudinary.uploader.upload(image);
+
     try {
-        await Menu.update(
-            { name, description, price, calories, image, type },
-            {
-                where: {
-                    id
-                }
-            }
+        const menu = await Menu.findByPk(id as string)
+
+        const imageId = getCloudinaryImageId(menu.image)
+        cloudinary.uploader.destroy(imageId);
+
+        await menu.update(
+            { name, description, price, calories, image: secure_url, type },
         )
 
         res.json({
