@@ -15,7 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateFood = exports.deleteFood = exports.postFood = exports.getFoodById = exports.getMenu = void 0;
 const sequelize_1 = require("sequelize");
 const paginator_1 = require("../helpers/paginator");
+const uploads_1 = require("../helpers/uploads");
 const menu_1 = __importDefault(require("../models/database/menu"));
+const cloudinary = require('cloudinary').v2;
+cloudinary.config(process.env.CLOUDINARY_URL);
 const getMenu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const limit = Number(req.query.limit) || 10;
     const offset = Number(req.query.offset) || 0;
@@ -66,7 +69,8 @@ const getFoodById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getFoodById = getFoodById;
 const postFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, description, price, calories, image, type } = req.body;
-    const food = menu_1.default.build({ name, description, price, calories, image, type });
+    const { secure_url } = yield cloudinary.uploader.upload(image);
+    const food = menu_1.default.build({ name, description, price, calories, image: secure_url, type });
     try {
         yield food.save();
         res.json({
@@ -83,11 +87,10 @@ exports.postFood = postFood;
 const deleteFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        yield menu_1.default.destroy({
-            where: {
-                id
-            }
-        });
+        const menu = yield menu_1.default.findByPk(id);
+        const imageId = uploads_1.getCloudinaryImageId(menu.image);
+        cloudinary.uploader.destroy(imageId);
+        yield menu.destroy();
         res.json({
             msg: 'Food deleted successfully.'
         });
@@ -102,12 +105,12 @@ exports.deleteFood = deleteFood;
 const updateFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { name, description, price, calories, image, type } = req.body;
+    const { secure_url } = yield cloudinary.uploader.upload(image);
     try {
-        yield menu_1.default.update({ name, description, price, calories, image, type }, {
-            where: {
-                id
-            }
-        });
+        const menu = yield menu_1.default.findByPk(id);
+        const imageId = uploads_1.getCloudinaryImageId(menu.image);
+        cloudinary.uploader.destroy(imageId);
+        yield menu.update({ name, description, price, calories, image: secure_url, type });
         res.json({
             msg: 'Food updated successfully.'
         });
