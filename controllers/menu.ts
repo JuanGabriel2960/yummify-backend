@@ -11,8 +11,24 @@ export const getMenu = async (req: Request, res: Response) => {
     const limit = Number(req.query.limit) || 10;
     const offset = Number(req.query.offset) || 0;
     const { name, description, type } = req.query;
+    const { authenticated_type } = req.cookies
 
     try {
+        if (authenticated_type === 'customer') {
+            const menu = await Menu.findAll({
+                where: {
+                    type: type as string || ['pizza', 'burger', 'extra']
+                },
+                order: [
+                    ['id', 'ASC']
+                ]
+            })
+
+            return res.json(
+                menu
+            )
+        }
+
         const menu = await Menu.findAndCountAll({
             where: {
                 name: {

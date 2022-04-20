@@ -7,7 +7,8 @@ import Admin from '../models/database/admin'
 export const getAdministrators = async (req: Request, res: Response) => {
     const limit = Number(req.query.limit) || 10;
     const offset = Number(req.query.offset) || 0;
-    const { name, email, status, role } = req.query;
+    const { name, email, role } = req.query;
+    const { authenticated } = req.cookies
 
     try {
         const administrators = await Admin.findAndCountAll({
@@ -18,7 +19,10 @@ export const getAdministrators = async (req: Request, res: Response) => {
                 email: {
                     [Op.iLike]: `%${email || ''}%`
                 },
-                role: role as string || ['administrator', 'publisher', 'reader']
+                role: role as string || ['administrator', 'publisher', 'reader'],
+                id: {
+                    [Op.not]: authenticated.id
+                }
             },
             attributes: {
                 exclude: ['password']
@@ -83,8 +87,15 @@ export const postAdmin = async (req: Request, res: Response) => {
 export const activateAdmin = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { status } = req.body
+    const { authenticated } = req.cookies
 
     try {
+        if (authenticated.id == id) {
+            return res.status(500).json({
+                msg: `You can not ${status == true ? 'activate' : 'disable'} yourself.`
+            })
+        }
+
         await Admin.update(
             { status },
             {
@@ -107,8 +118,15 @@ export const activateAdmin = async (req: Request, res: Response) => {
 
 export const deleteAdmin = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const { authenticated } = req.cookies
 
     try {
+        if (authenticated.id == id) {
+            return res.status(500).json({
+                msg: 'You can not delete yourself.'
+            })
+        }
+
         await Admin.destroy({
             where: {
                 id

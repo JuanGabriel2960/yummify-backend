@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken';
 import Customer from '../models/database/customer';
 import Admin from '../models/database/admin';
 
-interface JWTPayload {
+export interface JWTPayload {
     id: number;
-    authenticated_type: string;
+    authenticated_type: 'admin' | 'customer';
     iat: number;
     exp: number;
 }
