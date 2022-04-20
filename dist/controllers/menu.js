@@ -48,6 +48,7 @@ const getMenu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -61,6 +62,7 @@ const getFoodById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.json(food);
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -78,6 +80,7 @@ const postFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -96,6 +99,7 @@ const deleteFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -116,6 +120,7 @@ const updateFood = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });

@@ -37,6 +37,7 @@ export const getAdministrators = async (req: Request, res: Response) => {
             "administrators": administrators.rows
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -51,6 +52,7 @@ export const getAdminById = async (req: Request, res: Response) => {
 
         res.json(admin)
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -71,6 +73,7 @@ export const postAdmin = async (req: Request, res: Response) => {
             msg: 'Admin added successfully.'
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -116,6 +119,7 @@ export const deleteAdmin = async (req: Request, res: Response) => {
             msg: 'Admin deleted successfully.'
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })

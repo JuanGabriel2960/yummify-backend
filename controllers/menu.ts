@@ -37,6 +37,7 @@ export const getMenu = async (req: Request, res: Response) => {
             "menu": menu.rows
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -51,6 +52,7 @@ export const getFoodById = async (req: Request, res: Response) => {
 
         res.json(food)
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -70,6 +72,7 @@ export const postFood = async (req: Request, res: Response) => {
             msg: 'Food added successfully.'
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -91,6 +94,7 @@ export const deleteFood = async (req: Request, res: Response) => {
             msg: 'Food deleted successfully.'
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -117,6 +121,7 @@ export const updateFood = async (req: Request, res: Response) => {
             msg: 'Food updated successfully.'
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })

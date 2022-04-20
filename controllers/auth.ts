@@ -35,6 +35,7 @@ export const customerLogin = async (req: Request, res: Response) => {
             token
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -57,6 +58,7 @@ export const customerRegister = async (req: Request, res: Response) => {
             token
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -94,6 +96,7 @@ export const adminLogin = async (req: Request, res: Response) => {
             token
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })
@@ -116,6 +119,7 @@ export const adminRegister = async (req: Request, res: Response) => {
             token
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: 'Internal Server Error.'
         })

@@ -49,6 +49,7 @@ const getAdministrators = (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -62,6 +63,7 @@ const getAdminById = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.json(admin);
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -80,6 +82,7 @@ const postAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -120,6 +123,7 @@ const deleteAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });

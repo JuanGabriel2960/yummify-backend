@@ -43,6 +43,7 @@ const customerLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -62,6 +63,7 @@ const customerRegister = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -94,6 +96,7 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
@@ -113,6 +116,7 @@ const adminRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             msg: 'Internal Server Error.'
         });
